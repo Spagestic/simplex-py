@@ -16,7 +16,7 @@ def tabular_simplex(
     rhs_values: np.ndarray,
     senses: list[str],
     problem_type: str = 'max'
-) -> tuple[str, np.ndarray | None, float | None]:
+) -> tuple[str, np.ndarray | None, float | None, list[np.ndarray]]:
     """
     Solves a linear programming problem using the tabular simplex method,
     printing the major steps for educational purposes. This version allows
@@ -35,12 +35,15 @@ def tabular_simplex(
         problem_type (str): 'max' for maximization, 'min' for minimization.
 
     Returns:
-        tuple[str, np.ndarray | None, float | None]: A tuple containing:
+        tuple[str, np.ndarray | None, float | None, list[np.ndarray]]: A tuple containing:
             - status: 'optimal', 'unbounded', or 'infeasible'
             - x: The optimal solution (numpy array) or None if the problem is unbounded/infeasible.
             - z: The optimal objective value or None if the problem is unbounded/infeasible.
+            - tableau_history: A list of numpy arrays representing the tableau at each iteration.
     """
     logger.info("Starting tabular simplex method")
+    
+    tableau_history = []  # Initialize list to store tableau history
     
     try:
         # Validate inputs to ensure the data is suitable for the simplex method
@@ -75,6 +78,9 @@ def tabular_simplex(
             print(f"Iteration {iteration}:")
             print("Current tableau:")
             print(tableau)
+            
+            # Store the current tableau in the history
+            tableau_history.append(tableau.copy())
 
             # Optimality test: if all coefficients (except RHS) are non-negative.
             # If true, the current solution is optimal.
@@ -84,7 +90,7 @@ def tabular_simplex(
                 optimal_solution, optimal_objective_value = extract_solution(tableau, num_original_vars, num_constraints, problem_type)
                 print("\nOptimal solution found!")
                 logger.info(f"Optimal solution found: {optimal_solution}, Objective value: {optimal_objective_value}")
-                return status, optimal_solution, optimal_objective_value
+                return status, optimal_solution, optimal_objective_value, tableau_history
 
             # Select entering variable: choose most negative coefficient in objective row.
             # This indicates which variable to increase to improve the objective function.
@@ -102,7 +108,7 @@ def tabular_simplex(
                 status = 'unbounded'
                 print("\nProblem is unbounded!")
                 logger.warning("Problem is unbounded")
-                return status, None, None
+                return status, None, None, tableau_history
             
             print(f"\nLeaving variable: row {leaving_row}")
             print(f"Pivot element: {tableau[leaving_row, entering_col_index]:.4f}")
@@ -113,7 +119,7 @@ def tabular_simplex(
 
     except ValueError as e:
         logger.error(f"ValueError: {e}")
-        return 'infeasible', None, None
+        return 'infeasible', None, None, tableau_history
     except Exception as e:
         logger.exception(f"An unexpected error occurred: {e}")
-        return 'infeasible', None, None
+        return 'infeasible', None, None, tableau_history
