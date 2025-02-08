@@ -1,40 +1,55 @@
 import numpy as np
+from typing import Tuple
+import logging
 
-def extract_solution(tableau, n, m, prob_type='max'):
+# Set up logging
+logger = logging.getLogger(__name__)
+
+def extract_solution(
+    tableau: np.ndarray,
+    num_original_vars: int,
+    num_constraints: int,
+    problem_type: str = 'max'
+) -> Tuple[np.ndarray, float]:
     """
     Extracts the solution from the final tableau.
 
     Args:
-        tableau: The final simplex tableau (numpy array).
-        n: The number of original variables.
-        m: The number of constraints.
-        prob_type: 'max' for maximization, 'min' for minimization.
+        tableau (np.ndarray): The final simplex tableau.
+        num_original_vars (int): The number of original variables.
+        num_constraints (int): The number of constraints.
+        problem_type (str): 'max' for maximization, 'min' for minimization.
 
     Returns:
-        A tuple containing:
-            - x: The optimal solution (numpy array).
-            - z: The optimal objective value.
+        Tuple[np.ndarray, float]: A tuple containing the optimal solution and the optimal objective value.
     """
-    x = np.zeros(n)
+    logger.info("Extracting solution from the tableau")
+    
+    optimal_solution = np.zeros(num_original_vars)
     
     # Iterate through each of the original variables
-    for i in range(n):
+    for i in range(num_original_vars):
         # Check if the column corresponds to a basic variable (i.e., it has a 1 and the rest are 0)
-        col = tableau[:, i]
+        column = tableau[:, i]
         
         # Check if the column is a unit vector
-        if np.sum(np.abs(col)) == 1 and np.sum(col == np.abs(col)) == 1:
+        if np.sum(np.abs(column)) == 1 and np.sum(column == np.abs(column)) == 1:
             # If it is a unit vector, find the row where the 1 is located
-            basic_var_row = np.where(col == 1)[0][0]
+            basic_variable_row = np.where(column == 1)[0][0]
             
             # The value of the basic variable is the value in the right-hand side of the tableau
-            x[i] = tableau[basic_var_row, -1]
+            optimal_solution[i] = tableau[basic_variable_row, -1]
+            logger.debug(f"Variable x_{i+1} is basic with value {optimal_solution[i]}")
             
     # Extract the optimal objective value from the tableau
-    z = tableau[0, -1]
+    optimal_objective_value = tableau[0, -1]
     
     # If the problem was a minimization problem, negate the objective value
-    if prob_type == 'min':
-        z = -z
+    if problem_type == 'min':
+        optimal_objective_value = -optimal_objective_value
+        logger.debug("Negating objective value for minimization problem")
         
-    return x, z
+    logger.info(f"Optimal solution: {optimal_solution}")
+    logger.info(f"Optimal objective value: {optimal_objective_value}")
+    
+    return optimal_solution, optimal_objective_value
