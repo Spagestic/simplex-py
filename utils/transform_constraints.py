@@ -1,23 +1,38 @@
 import numpy as np
+from typing import List, Tuple
+import logging
 
-def transform_constraints(A, b, senses):
+# Set up logging
+logger = logging.getLogger(__name__)
+
+def transform_constraints(
+    constraint_matrix: np.ndarray,
+    rhs_values: np.ndarray,
+    senses: List[str]
+) -> Tuple[np.ndarray, np.ndarray]:
     """
-    Transforms '>=' constraints to '<=' by multiplying the row and b by -1.
+    Transforms '>=' constraints to '<=' by multiplying the row and right-hand side value by -1.
 
     Args:
-        A: Constraint coefficient matrix (numpy array).
-        b: Right-hand side values (numpy array).
-        senses: List of strings for each constraint ('<=', '>=', '=').
+        constraint_matrix (np.ndarray): Constraint coefficient matrix.
+        rhs_values (np.ndarray): Right-hand side values.
+        senses (List[str]): List of strings for each constraint ('<=', '>=', '=').
 
     Returns:
-        A_trans: transformed constraint matrix
-        b_trans: transformed right-hand side values
+        Tuple[np.ndarray, np.ndarray]: A tuple containing the transformed constraint matrix and right-hand side values.
     """
-    A_trans = A.copy()
-    b_trans = b.copy()
-    for i in range(len(senses)):
-        if senses[i] == '>=':
-            A_trans[i, :] = -A[i, :]
-            b_trans[i] = -b[i]
+    logger.info("Transforming constraints to standard form (<=)")
+    
+    transformed_constraint_matrix = constraint_matrix.copy()
+    transformed_rhs_values = rhs_values.copy()
+    
+    for i, sense in enumerate(senses):
+        if sense == '>=':
+            logger.debug(f"Transforming constraint {i} from '>=' to '<='")
+            transformed_constraint_matrix[i, :] = -constraint_matrix[i, :]
+            transformed_rhs_values[i] = -rhs_values[i]
             senses[i] = '<='  # Update sense to '<='
-    return A_trans, b_trans
+            logger.debug(f"Constraint {i} transformed")
+            
+    logger.info("Constraints transformed successfully")
+    return transformed_constraint_matrix, transformed_rhs_values
