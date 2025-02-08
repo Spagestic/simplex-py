@@ -3,9 +3,10 @@ import numpy as np
 from typing import List, Tuple
 from .transform_constraints import transform_constraints
 from .setup_tableau import setup_tableau
-from .pivot import select_entering_variable, select_leaving_variable, pivot
+from .pivot import select_entering_variable, select_leaving_variable, pivot, calculate_ratios
 from .solution_extraction import extract_solution
 import logging
+from ..simplex_solver import simplex_solver  # Import the simplex_solver
 
 # Set up logging
 logger = logging.getLogger(__name__)
@@ -138,6 +139,42 @@ class TestSimplex(unittest.TestCase):
         expected_z2 = 31.25
         self.assertTrue(np.allclose(x2, expected_x2))
         self.assertAlmostEqual(z2, expected_z2)
+
+    def test_simplex_solver(self):
+        # Test case 1: Maximization problem
+        objective_coeffs1 = np.array([3, 5])
+        constraint_matrix1 = np.array([[1, 2], [3, 4]])
+        rhs_values1 = np.array([5, 6])
+        senses1 = ['<=', '<=']
+        problem_type1 = 'max'
+        
+        optimal_solution1, optimal_objective_value1 = simplex_solver(
+            objective_coeffs1, constraint_matrix1, rhs_values1, senses1, problem_type1
+        )
+        
+        expected_solution1 = np.array([0.0, 2.5])
+        expected_objective_value1 = 12.5
+        
+        self.assertTrue(np.allclose(optimal_solution1, expected_solution1))
+        self.assertAlmostEqual(optimal_objective_value1, expected_objective_value1)
+        
+        # Test case 2: Minimization problem
+        objective_coeffs2 = np.array([2, 3])
+        constraint_matrix2 = np.array([[1, 1], [1, -1]])
+        rhs_values2 = np.array([10, 5])
+        senses2 = ['>=', '=']
+        problem_type2 = 'min'
+        
+        optimal_solution2, optimal_objective_value2 = simplex_solver(
+            objective_coeffs2, constraint_matrix2, rhs_values2, senses2, problem_type2
+        )
+        
+        # Expected solution for the minimization problem
+        expected_solution2 = np.array([7.5, 2.5])
+        expected_objective_value2 = 22.5
+        
+        self.assertTrue(np.allclose(optimal_solution2, expected_solution2))
+        self.assertAlmostEqual(optimal_objective_value2, expected_objective_value2)
 
 if __name__ == '__main__':
     unittest.main()
