@@ -36,6 +36,10 @@ def main():
     # Load example values if an example is selected
     objective_coeffs, constraint_matrix, rhs_values, senses, problem_type = load_example(example_name, example_problems)
 
+    # Update the number of constraints based on the selected example
+    if example_name != "None":
+        st.session_state.num_constraints = len(example_problems[example_name]["constraint_matrix"])
+
     # Input form
     problem_type, objective_coeffs, constraint_matrix, rhs_values, senses, submitted = input_form(example_name, example_problems)
 
