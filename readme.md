@@ -1,5 +1,7 @@
 # Simplex Method Implementation
 
+![Demo Image](demo.png)
+<https://simplexsolver.streamlit.app/>
 This project implements the Simplex method for solving linear programming problems. It supports maximization and minimization problems, as well as different types of constraints (<=, >=, =).
 
 ## Overview
@@ -15,7 +17,8 @@ The project consists of the following main components:
   - printing the problem in LaTeX format (`latex_printer.py`),
   - validating inputs (`input_validation.py`),
   - configuring logging (`logger_config.py`),
-  - testing the simplex implementation (`test_simplex.py`).
+  - testing the simplex implementation (`test_simplex.py`),
+  - checking for infeasibility (`infeasibility_check.py`).
 - `example_simplex.py`: Example script demonstrating how to use the simplex solver.
 - `simplex_solver.py`: Another example script demonstrating how to use the simplex solver.
 - `simplex.ipynb`: A jupyter notebook demonstrating the simplex method.
@@ -72,22 +75,43 @@ else:
 ## Project Structure
 
 ```
-├── .vscode/
-│   └── settings.json
-├── utils/
-│   ├── input_validation.py
-│   ├── latex_printer.py
-│   ├── logger_config.py
-│   ├── pivot.py
-│   ├── setup_tableau.py
-│   ├── solution_extraction.py
-│   ├── test_simplex.py
-│   └── transform_constraints.py
-├── example_simplex.py
-├── simplex_solver.py
-├── simplex.ipynb
-└── simplex.py
+└── 📁.vscode
+    └── settings.json
+└── 📁utils
+    └── infeasibility_check.py
+    └── input_validation.py
+    └── latex_printer.py
+    └── logger_config.py
+    └── pivot.py
+    └── ratio_analysis.py
+    └── setup_tableau.py
+    └── solution_extraction.py
+    └── test_simplex.py
+    └── transform_constraints.py
+└── 📁webapp
+    └── 📁components
+        └── display_results.py
+        └── example_selection.py
+        └── input_form.py
+    └── example_problems.py
+    └── 📁logic
+        └── format_term.py
+        └── load_example.py
+        └── problem_latex.py
+        └── solve_simplex.py
+        └── visualize_2d.py
+    └── 📁simplex
+        └── __init__.py
+└── .gitignore
+└── example_simplex.py
+└── image.png
 └── readme.md
+└── requirements.txt
+└── simplex_solver.py
+└── simplex.ipynb
+└── simplex.py
+└── streamlit_app.py
+
 ```
 
 ## Contributing
