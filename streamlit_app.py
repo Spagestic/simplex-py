@@ -210,7 +210,8 @@ def main():
                         if constraint_str.startswith("+"):
                             constraint_str = constraint_str[1:]
                         
-                        latex_str += constraint_str + f" {senses[i]} {int(rhs_values[i]) if isinstance(rhs_values[i], float) and rhs_values[i].is_integer() else rhs_values[i]}"
+                        latex_str += constraint_str + f" {senses[i]} {rhs_values[i]:.2f}"
+
                         
                         if i < len(constraint_matrix) - 1:
                             latex_str += r" \\" + "\n"
