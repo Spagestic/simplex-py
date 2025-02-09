@@ -6,6 +6,21 @@ from simplex import tabular_simplex
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
+
+def format_term(coeff, index):
+    """Format a term in the objective function or constraint."""
+    if coeff == 0:
+        return ""
+    term = ""
+    if coeff > 0:
+        term += "+ "
+    else:
+        term += "- "
+        coeff = abs(coeff)  # Use absolute value for negative coefficients
+    if coeff != 1:
+        term += f"{coeff}"
+    term += f"x_{index+1}"
+    return term
 logger = logging.getLogger(__name__)
 
 def main():
@@ -176,10 +191,42 @@ def main():
 
                     # Display the problem in LaTeX format
                     st.subheader("Problem Formulation (LaTeX)")
-                    latex_str = f"\\text{{Maximize }} z = {', '.join([f'{int(c) if c.is_integer() else c}x_{i+1}' for i, c in enumerate(objective_coeffs)])} \\\\\n"
-                    latex_str += "\\text{Subject to:} \\\\\n"
+
+                    # Begin LaTeX string
+                    latex_str = r"\begin{array}{rl}" + "\n"
+                    
+                    # Objective function
+                    objective_terms = [format_term(c, i) for i, c in enumerate(objective_coeffs)]
+                    objective_str = " ".join(term for term in objective_terms if term)
+                    if objective_str.startswith("+"):
+                        objective_str = objective_str[1:]  # Remove leading "+" sign
+                    latex_str += r"    \text{max} & " + objective_str + r" \\" + "\n"
+                    
+                    # Constraints
+                    # Initialize constraint string
+                    latex_str += r"    \text{s.t.} & "
                     for i in range(len(constraint_matrix)):
-                        latex_str += f"{', '.join([f'{int(a) if a.is_integer() else a}x_{j+1}' for j, a in enumerate(constraint_matrix[i])])} {senses[i]} {int(rhs_values[i]) if isinstance(rhs_values[i], float) and rhs_values[i].is_integer() else rhs_values[i]} \\\\\n"
+                        constraint_terms = [format_term(a, j) for j, a in enumerate(constraint_matrix[i])]
+                        constraint_str = " ".join(term for term in constraint_terms if term)
+                        if constraint_str.startswith("+"):
+                            constraint_str = constraint_str[1:]
+                        
+                        # Add constraint to LaTeX string
+                        latex_str += constraint_str + f" {senses[i]} {int(rhs_values[i]) if isinstance(rhs_values[i], float) and rhs_values[i].is_integer() else rhs_values[i]}"
+                        
+                        # Add newline except after the last constraint
+                        if i < len(constraint_matrix) - 1:
+                            latex_str += r", \\" + "\n"
+                        else:
+                            latex_str += r", \\" + "\n"
+                    
+                    # Non-negativity constraints
+                    non_negativity_str = r"    & 0 \leq " + ", \quad 0 \leq ".join([f"x_{i+1}" for i in range(len(objective_coeffs))]) + "."
+                    latex_str += non_negativity_str + "\n"
+                    
+                    # End LaTeX string
+                    latex_str += r"\end{array}"
+                    
                     st.latex(latex_str)
 
                 elif status == 'unbounded':
