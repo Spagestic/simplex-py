@@ -22,11 +22,21 @@ def visualize_2d(objective_coeffs, constraint_matrix, rhs, solution):
         constraint_str = ""
 
         if constraint_x != 0:
-            constraint_str += f"{constraint_x}x"
+            if constraint_x == 1:
+                constraint_str += "x"
+            elif constraint_x == -1:
+                constraint_str += "-x"
+            else:
+                constraint_str += f"{constraint_x}x"
         if constraint_y != 0:
             if constraint_str != "":
                 constraint_str += " + "
-            constraint_str += f"{constraint_y}y"
+            if constraint_y == 1:
+                constraint_str += "y"
+            elif constraint_y == -1:
+                constraint_str += "-y"
+            else:
+                constraint_str += f"{constraint_y}y"
 
         if constraint_str == "":
             constraint_str = "0"
