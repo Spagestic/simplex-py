@@ -17,7 +17,8 @@ def tabular_simplex(
     constraint_matrix: np.ndarray,
     rhs_values: np.ndarray,
     senses: list[str],
-    problem_type: str = 'max'
+    problem_type: str = 'max',
+    verbose: bool = True  # Added verbose parameter with a default value of True
 ) -> tuple[str, np.ndarray | None, float | None, list[np.ndarray]]:
     logger.info("Starting tabular simplex method")
     
@@ -52,6 +53,8 @@ def tabular_simplex(
         # Check for infeasibility: look for artificial variables in the basis with non-zero values
         status = check_infeasibility(tableau, num_original_vars, senses, num_constraints)
         if status == 'infeasible':
+            if verbose:
+                print("The problem is infeasible at the initial tableau.")
             return status, None, None, tableau_history
         
         iteration = 0
@@ -82,15 +85,24 @@ def tabular_simplex(
 
             # Check for optimality
             if np.all(tableau[0, :-1] >= 0):
+                if verbose:
+                    print("All coefficients in the objective row are now nonnegative.")
+                    print("Explanation: No further improvement is possible so the current solution is optimal.")
                 status = 'optimal'
                 optimal_solution, optimal_objective_value = extract_solution(tableau, num_original_vars, num_constraints, problem_type)
                 tol = 1e-6
                 if np.any(np.dot(transformed_constraint_matrix, optimal_solution) > transformed_rhs_values + tol):
                     print("\nProblem is infeasible!")
                     logger.warning("Optimal solution violates at least one constraint")
+                    if verbose:
+                        print("After checking, there is a violation in the constraints (infeasible basic variable)!")
                     return 'infeasible', None, None, tableau_history
                 print("\nOptimal solution found!")
                 logger.info(f"Optimal solution found: {optimal_solution}, Objective value: {optimal_objective_value}")
+                if verbose:
+                    print("Optimal solution reached!")
+                    print("Solution:", np.round(optimal_solution, 3))
+                    print("Objective value:", round(optimal_objective_value, 3))
                 return status, optimal_solution, optimal_objective_value, tableau_history
 
             # Display detailed optimality test status
@@ -99,6 +111,9 @@ def tabular_simplex(
             
             # Select entering variable
             entering_col_index = select_entering_variable(tableau)
+            if verbose:
+                print(f"Entering variable (most negative coefficient) is at column index: {entering_col_index}")
+                print(f"Coefficient value for entering variable: {tableau[0, entering_col_index]:.3f}")
             print(f"\nEntering variable chosen: x_{entering_col_index+1} with coefficient {tableau[0, entering_col_index]:.4f}")
             print(f"This is the most negative coefficient, indicating the largest potential increase in the objective function.")
             logger.debug(f"Selected entering variable: column {entering_col_index}")
@@ -123,11 +138,15 @@ def tabular_simplex(
                 status = 'unbounded'
                 print("\nProblem is unbounded!")
                 logger.warning("Problem is unbounded")
+                if verbose:
+                    print("No valid leaving variable found (all ratios are infinite). The problem is unbounded!")
                 return status, None, None, tableau_history
             
             print(f"\nLeaving variable chosen: row {leaving_row} with pivot element {tableau[leaving_row, entering_col_index]:.4f}")
             print(f"This row will be replaced by the entering variable in the next iteration.")
             logger.debug("About to perform pivot operation")
+            if verbose:
+                print(f"Leaving variable is in row: {leaving_row}")
             
             # Perform pivot and display normalized pivot row
             tableau = pivot(tableau, entering_col_index, leaving_row)
@@ -136,6 +155,9 @@ def tabular_simplex(
             print("\n[Step] Normalized pivot row details:")
             print(tableau[leaving_row, :])
             print("The pivot row has been normalized, and other rows have been adjusted to make the entering variable's column a unit vector.")
+            if verbose:
+                print("After pivot operation, the tableau is updated as follows:")
+                print(tableau)
             
     except ValueError as e:
         logger.error(f"ValueError: {e}")
