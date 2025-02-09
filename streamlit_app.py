@@ -47,7 +47,7 @@ def main():
         if objective_coeffs is not None and constraint_matrix is not None and rhs_values is not None:
             # Call the tabular simplex method
             status, solution, objective_value, tableau_history = solve_simplex(
-                objective_coeffs, constraint_matrix, rhs_values, senses, problem_type
+                objective_coeffs, constraint_matrix, rhs_values, senses, problem_type, verbose=True
             )
 
             # Display results
