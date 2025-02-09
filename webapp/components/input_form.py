@@ -2,22 +2,6 @@ import streamlit as st
 import numpy as np
 
 def input_form(example_name, example_problems):
-    """
-    Creates a Streamlit sidebar form for input parameters.
-
-    Args:
-        example_name (str): The name of the selected example problem.
-        example_problems (dict): A dictionary containing example problems.
-
-    Returns:
-        tuple: A tuple containing the input parameters:
-            - problem_type (str): The type of the problem ("max" or "min").
-            - objective_coeffs (np.array): The coefficients of the objective function.
-            - constraint_matrix (np.array): The matrix of constraint coefficients.
-            - rhs_values (np.array): The right-hand side values of the constraints.
-            - senses (list): The senses of the constraints ("<=", ">=", "=").
-            - submitted (bool): Whether the form was submitted.
-    """
     with st.sidebar.form("input_form"):
         st.header("Input Parameters")
 

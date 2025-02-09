@@ -2,15 +2,6 @@ import streamlit as st
 import pandas as pd
 
 def display_results(status, solution, objective_value, tableau_history):
-    """
-    Displays the results of the simplex method.
-
-    Args:
-        status (str): The status of the solution ("optimal", "unbounded", "infeasible").
-        solution (np.array): The optimal solution.
-        objective_value (float): The optimal objective value.
-        tableau_history (list): A list of tableaus representing the iterations of the simplex method.
-    """
     st.header("Results")
     st.write(f"Status: {status}")
     if status == 'optimal':
