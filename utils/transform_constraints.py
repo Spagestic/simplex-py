@@ -14,13 +14,14 @@ def transform_constraints(
     
     transformed_constraint_matrix = constraint_matrix.copy()
     transformed_rhs_values = rhs_values.copy()
+    transformed_senses = senses.copy()  # Create a copy of the senses list
     
     for i, sense in enumerate(senses):
         if sense == '>=':
             logger.debug(f"Transforming constraint {i} from '>=' to '<='")
             transformed_constraint_matrix[i, :] = -constraint_matrix[i, :]
             transformed_rhs_values[i] = -rhs_values[i]
-            senses[i] = '<='  # Update sense to '<='
+            transformed_senses[i] = '<='  # Update sense to '<=' in the copy
             logger.debug(f"Constraint {i} transformed")
             
     logger.info("Constraints transformed successfully")
