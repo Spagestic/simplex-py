@@ -6,16 +6,6 @@ import logging
 logger = logging.getLogger(__name__)
 
 def select_entering_variable(tableau: np.ndarray) -> int:
-    """
-    Selects the entering variable by choosing the column with the most negative
-    coefficient in the objective row (first row).
-
-    Args:
-        tableau (np.ndarray): The simplex tableau.
-
-    Returns:
-        int: The index of the entering variable (column index).
-    """
     logger.debug("Selecting entering variable")
     entering_col_index = np.argmin(tableau[0, :-1])
     logger.debug(f"Entering variable selected: column {entering_col_index}")
@@ -23,18 +13,6 @@ def select_entering_variable(tableau: np.ndarray) -> int:
 
 
 def calculate_ratios(tableau: np.ndarray, entering_col_index: int) -> np.ndarray:
-    """
-    Calculates the ratios for the leaving variable selection.
-    Ignores rows where the element in the entering column is zero or negative.
-
-    Args:
-        tableau (np.ndarray): The simplex tableau.
-        entering_col_index (int): The index of the entering variable (column index).
-
-    Returns:
-        np.ndarray: An array of ratios (b_i / a_ij) for each row, or None if the element
-        in the entering column is zero or negative.
-    """
     logger.debug(f"Calculating ratios for entering column {entering_col_index}")
     ratios = []
     for i in range(1, tableau.shape[0]):
@@ -49,17 +27,6 @@ def calculate_ratios(tableau: np.ndarray, entering_col_index: int) -> np.ndarray
 
 
 def select_leaving_variable(tableau: np.ndarray, entering_col_index: int) -> Optional[int]:
-    """
-    Selects the leaving variable by choosing the row with the minimum ratio
-    (b_i / a_ij) where a_ij is the element in the entering column.
-
-    Args:
-        tableau (np.ndarray): The simplex tableau.
-        entering_col_index (int): The index of the entering variable (column index).
-
-    Returns:
-        Optional[int]: The index of the leaving variable (row index), or None if the problem is unbounded.
-    """
     logger.debug("Selecting leaving variable")
     ratios = calculate_ratios(tableau, entering_col_index)
     
@@ -79,17 +46,6 @@ def select_leaving_variable(tableau: np.ndarray, entering_col_index: int) -> Opt
 
 
 def pivot(tableau: np.ndarray, entering_col_index: int, leaving_row: int) -> np.ndarray:
-    """
-    Performs the pivot operation on the tableau.
-
-    Args:
-        tableau (np.ndarray): The simplex tableau.
-        entering_col_index (int): The index of the entering variable (column index).
-        leaving_row (int): The index of the leaving variable (row index).
-
-    Returns:
-        np.ndarray: The updated tableau after the pivot operation.
-    """
     logger.info(f"Performing pivot operation: entering column {entering_col_index}, leaving row {leaving_row}")
     pivot_element = tableau[leaving_row, entering_col_index]
     

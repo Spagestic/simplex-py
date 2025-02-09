@@ -12,19 +12,6 @@ def validate_inputs(
     senses: List[str],
     problem_type: str = 'max'
 ) -> None:
-    """
-    Validates the inputs for the simplex method.
-
-    Args:
-        objective_coeffs (np.ndarray): Objective function coefficients.
-        constraint_matrix (np.ndarray): Constraint coefficient matrix.
-        rhs_values (np.ndarray): Right-hand side values.
-        senses (List[str]): List of strings for each constraint ('<=', '>=', '=').
-        problem_type (str): 'max' for maximization, 'min' for minimization.
-
-    Raises:
-        ValueError: If any of the inputs are invalid.
-    """
     logger.info("Validating inputs")
     
     # Check if the objective coefficients are a 1D numpy array

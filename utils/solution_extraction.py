@@ -11,18 +11,6 @@ def extract_solution(
     num_constraints: int,
     problem_type: str = 'max'
 ) -> Tuple[np.ndarray, float]:
-    """
-    Extracts the solution from the final tableau.
-
-    Args:
-        tableau (np.ndarray): The final simplex tableau.
-        num_original_vars (int): The number of original variables.
-        num_constraints (int): The number of constraints.
-        problem_type (str): 'max' for maximization, 'min' for minimization.
-
-    Returns:
-        Tuple[np.ndarray, float]: A tuple containing the optimal solution and the optimal objective value.
-    """
     logger.info("Extracting solution from the tableau")
     
     optimal_solution = np.zeros(num_original_vars)

@@ -10,17 +10,6 @@ def transform_constraints(
     rhs_values: np.ndarray,
     senses: List[str]
 ) -> Tuple[np.ndarray, np.ndarray]:
-    """
-    Transforms '>=' constraints to '<=' by multiplying the row and right-hand side value by -1.
-
-    Args:
-        constraint_matrix (np.ndarray): Constraint coefficient matrix.
-        rhs_values (np.ndarray): Right-hand side values.
-        senses (List[str]): List of strings for each constraint ('<=', '>=', '=').
-
-    Returns:
-        Tuple[np.ndarray, np.ndarray]: A tuple containing the transformed constraint matrix and right-hand side values.
-    """
     logger.info("Transforming constraints to standard form (<=)")
     
     transformed_constraint_matrix = constraint_matrix.copy()

@@ -12,19 +12,6 @@ def setup_tableau(
     senses: List[str],
     problem_type: str = 'max'
 ) -> np.ndarray:
-    """
-    Sets up the initial tableau for the simplex method.
-
-    Args:
-        objective_coeffs (np.ndarray): Objective function coefficients.
-        constraint_matrix (np.ndarray): Constraint coefficient matrix.
-        rhs_values (np.ndarray): Right-hand side values.
-        senses (List[str]): List of strings for each constraint ('<=', '>=', '=').
-        problem_type (str): 'max' for maximization, 'min' for minimization.
-
-    Returns:
-        np.ndarray: The initial tableau as a numpy array.
-    """
     logger.info("Setting up the initial tableau")
     
     num_constraints, num_original_vars = constraint_matrix.shape

@@ -12,16 +12,6 @@ def print_latex_problem(
     senses: List[str],
     problem_type: str = 'max'
 ) -> None:
-    """
-    Prints the linear programming problem in LaTeX format.
-
-    Args:
-        objective_coeffs (np.ndarray): Objective function coefficients.
-        constraint_matrix (np.ndarray): Constraint coefficient matrix.
-        rhs_values (np.ndarray): Right-hand side values.
-        senses (List[str]): List of strings for each constraint ('<=', '>=', '=').
-        problem_type (str): 'max' for maximization, 'min' for minimization.
-    """
     logger.info("Printing the linear programming problem in LaTeX format")
     
     num_vars = len(objective_coeffs)  # Number of variables
