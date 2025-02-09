@@ -17,7 +17,7 @@ def main():
 
     # Initialize session state for constraints
     if 'num_constraints' not in st.session_state:
-        st.session_state.num_constraints = 1
+        st.session_state.num_constraints = 2
     if 'constraint_inputs' not in st.session_state:
         st.session_state.constraint_inputs = []
 

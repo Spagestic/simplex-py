@@ -10,7 +10,7 @@ def input_form(example_name, example_problems, problem_type="max"):
         problem_type = st.selectbox("Problem Type", ["max", "min"], index=0 if problem_type == "max" else 1)
 
         # Objective coefficients input
-        objective_coeffs_str = st.text_input("Objective Function Coefficients (comma-separated)", "1, 2")
+        objective_coeffs_str = st.text_input("Objective Function Coefficients (comma-separated)", "5, 4")
         try:
             objective_coeffs = np.array([float(x) for x in objective_coeffs_str.split(',')])
         except ValueError:
@@ -23,6 +23,9 @@ def input_form(example_name, example_problems, problem_type="max"):
         # Constraint inputs
         st.subheader("Constraints")
 
+        if 'num_constraints' not in st.session_state:
+            st.session_state.num_constraints = 2
+
         # Dynamic constraint input rows
         constraint_matrix = []
         rhs_values = []
@@ -34,7 +37,7 @@ def input_form(example_name, example_problems, problem_type="max"):
                 if example_name != "None":
                     constraint_coeffs_str = ", ".join(map(str, example_problems[example_name]["constraint_matrix"][i]))
                 else:
-                    constraint_coeffs_str = "1, 1"
+                    constraint_coeffs_str = "3, 5" if i == 0 else "4, 1" if i == 1 else "0, 0"
                 constraint_coeffs_str = st.text_input(f"Constraint {i+1} Coefficients (comma-separated)", constraint_coeffs_str, key=f"constraint_{i}")
                 try:
                     constraint_coeffs = np.array([float(x) for x in constraint_coeffs_str.split(',')])
@@ -54,7 +57,7 @@ def input_form(example_name, example_problems, problem_type="max"):
                 if example_name != "None":
                     rhs_value = float(example_problems[example_name]["rhs_values"][i])
                 else:
-                    rhs_value = 0.0
+                    rhs_value = 78.0 if i == 0 else 36.0 if i == 1 else 0.0
                 try:
                     rhs_value = st.number_input(f"RHS {i+1}", value=rhs_value, format="%.2f", key=f"rhs_{i}")
                 except ValueError:
