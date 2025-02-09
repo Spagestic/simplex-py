@@ -47,6 +47,21 @@ def tabular_simplex(
         print(f"Number of variables (n): {num_original_vars}")
         print(f"Objective function coefficients (c): {objective_coeffs}")
         
+        # Check for infeasibility: look for artificial variables in the basis with non-zero values
+        num_slack_vars = senses.count('<=')
+        artificial_vars_start = num_original_vars + num_slack_vars
+        
+        for i in range(num_constraints):
+            basic_variable_col = np.where(tableau[i+1, :num_original_vars + num_slack_vars + num_constraints] == 1)[0]
+            if len(basic_variable_col) > 0:
+                basic_variable_col = basic_variable_col[0]
+                if basic_variable_col >= artificial_vars_start:
+                    if tableau[i+1, -1] != 0:  # Check if the artificial variable has a non-zero value
+                        status = 'infeasible'
+                        print("\nProblem is infeasible!")
+                        logger.warning("Problem is infeasible: artificial variable in basis with non-zero value")
+                        return status, None, None, tableau_history
+        
         iteration = 0
         while True:
             iteration += 1
@@ -64,8 +79,10 @@ def tabular_simplex(
                 status = 'optimal'
                 # Extract the optimal solution and objective value from the tableau
                 optimal_solution, optimal_objective_value = extract_solution(tableau, num_original_vars, num_constraints, problem_type)
+                
                 print("\nOptimal solution found!")
                 logger.info(f"Optimal solution found: {optimal_solution}, Objective value: {optimal_objective_value}")
+                
                 return status, optimal_solution, optimal_objective_value, tableau_history
 
             # Select entering variable: choose most negative coefficient in objective row.
