@@ -7,6 +7,7 @@ from utils.latex_printer import print_latex_problem
 from utils.infeasibility_check import check_infeasibility
 from utils.input_validation import validate_inputs
 import logging
+from utils.ratio_analysis import calculate_ratios  # Import the calculate_ratios function
 
 # Set up logging
 logger = logging.getLogger(__name__)
@@ -92,6 +93,8 @@ def tabular_simplex(
 
             # Leaving variable selection: compute ratios.
             # This determines which variable will leave the basis.
+            ratios = calculate_ratios(tableau, entering_col_index)
+            print(f"\nRatios for leaving variable selection: {ratios}")
             leaving_row = select_leaving_variable(tableau, entering_col_index)
             
             # Check for unboundedness.
