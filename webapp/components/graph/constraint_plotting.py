@@ -3,21 +3,6 @@ import streamlit as st
 import plotly.graph_objects as go
 from .create_constraint_string import create_constraint_string
 
-def calculate_intersection(constraint1, constraint2, rhs1, rhs2):
-    """
-    Calculate the intersection point of two constraints.
-    Returns None if the lines are parallel.
-    """
-    a1, b1 = constraint1
-    a2, b2 = constraint2
-    det = a1 * b2 - a2 * b1
-    if np.isclose(det, 0):
-        return None  # Lines are parallel
-
-    x = (b2 * rhs1 - b1 * rhs2) / det
-    y = (a1 * rhs2 - a2 * rhs1) / det
-    return x, y
-
 def plot_constraints(fig, constraint_matrix, rhs, senses):
     x_range = np.linspace(-10, 20, 400)
     y_range = np.linspace(-10, 20, 400)
