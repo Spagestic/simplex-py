@@ -44,7 +44,7 @@ example_problems = {
     "Example 7: Maximization with Three Variables": {
         "objective_coeffs": [3, 4, 1],
         "constraint_matrix": [[3, 10, 5], [5, 2, 8], [8, 10, 3]],
-        "rhs_values": [120, 60, 105],
+        "rhs_values": [120, 6, 105],
         "senses": ['<=', '<=', '<='],
         "problem_type": "max"
     }
