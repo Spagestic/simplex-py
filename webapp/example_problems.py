@@ -7,10 +7,10 @@ example_problems = {
         "problem_type": "max"
     },
     "Example 2: Minimization": {
-        "objective_coeffs": [2, 3],
-        "constraint_matrix": [[1, 1], [2, 1]],
-        "rhs_values": [10, 16],
-        "senses": ['>=', '='],
+        "objective_coeffs": [-1, -1],
+        "constraint_matrix": [[1, 2], [2, 1]],
+        "rhs_values": [3, 3],
+        "senses": ['<=', '<='],
         "problem_type": "min"
     },
     "Example 3: Maximization with Mixed Constraints": {
