@@ -57,7 +57,7 @@ def main():
                 latex_str = problem_latex(objective_coeffs, constraint_matrix, rhs_values, senses, problem_type)
                 st.latex(latex_str)
 
-            display_results(status, solution, objective_value, tableau_history, objective_coeffs, constraint_matrix, rhs_values)
+            display_results(status, solution, objective_value, tableau_history, objective_coeffs, constraint_matrix, rhs_values, senses)
         else:
             st.error("Please provide valid inputs for all parameters.")
 
