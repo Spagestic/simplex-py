@@ -106,10 +106,17 @@ def tabular_simplex(
             # Compute and display ratios with detailed explanation
             ratios = calculate_ratios(tableau, entering_col_index)
             print("\n[Step] Computing ratios for leaving variable:")
+            
+            # Create a ratios tableau for display
+            ratios_tableau = np.full((tableau.shape[0]-1, 1), np.inf)
             for i, ratio in enumerate(ratios[1:], start=1):
+                ratios_tableau[i-1, 0] = ratio
                 print(f"Row {i} ratio: {ratio:.4f}")
             print("Ratios are calculated as RHS / corresponding element in the entering variable's column.")
             print("The smallest non-negative ratio determines the leaving variable.")
+            print("\nRatios Tableau:")
+            print(ratios_tableau)
+            
             leaving_row = select_leaving_variable(tableau, entering_col_index)
 
             if leaving_row is None:
