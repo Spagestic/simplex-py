@@ -3,7 +3,7 @@ import pandas as pd
 from webapp.logic.visualize_2d import visualize_2d
 import numpy as np  # Import numpy
 
-def display_results(status, solution, objective_value, tableau_history, objective_coeffs, constraint_matrix, rhs_values):
+def display_results(status, solution, objective_value, tableau_history, objective_coeffs, constraint_matrix, rhs_values, senses):
     st.header("Results")
     st.write(f"Status: {status}")
     if status == 'optimal':
@@ -25,15 +25,15 @@ def display_results(status, solution, objective_value, tableau_history, objectiv
 
         # Display 2D graph if the problem has two variables
         if len(objective_coeffs) == 2:
-            visualize_2d(objective_coeffs, constraint_matrix, rhs_values, solution)
+            visualize_2d(objective_coeffs, constraint_matrix, rhs_values, solution, senses)
     elif status == 'unbounded':
         st.write("The problem is unbounded.")
         if len(objective_coeffs) == 2:
-            visualize_2d(objective_coeffs, constraint_matrix, rhs_values, solution)
+            visualize_2d(objective_coeffs, constraint_matrix, rhs_values, solution, senses)
     elif status == 'infeasible':
         st.write("The problem is infeasible.")
         if len(objective_coeffs) == 2:
-            visualize_2d(objective_coeffs, constraint_matrix, rhs_values, solution)
+            visualize_2d(objective_coeffs, constraint_matrix, rhs_values, solution, senses)
 
 def calculate_ratios_from_tableau(tableau: np.ndarray, entering_col_index: int) -> np.ndarray:
     ratios = []
