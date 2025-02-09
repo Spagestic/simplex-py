@@ -41,7 +41,7 @@ def main():
         st.session_state.num_constraints = len(example_problems[example_name]["constraint_matrix"])
 
     # Input form
-    problem_type, objective_coeffs, constraint_matrix, rhs_values, senses, submitted = input_form(example_name, example_problems)
+    problem_type, objective_coeffs, constraint_matrix, rhs_values, senses, submitted = input_form(example_name, example_problems, problem_type)
 
     if submitted:
         if objective_coeffs is not None and constraint_matrix is not None and rhs_values is not None:

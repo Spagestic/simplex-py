@@ -2,12 +2,12 @@ import streamlit as st
 import numpy as np
 from webapp.logic.problem_latex import problem_latex
 
-def input_form(example_name, example_problems):
+def input_form(example_name, example_problems, problem_type="max"):
     with st.sidebar.form("input_form"):
         st.header("Input Parameters")
 
         # Problem type selection
-        problem_type = st.selectbox("Problem Type", ["max", "min"], index = 0)
+        problem_type = st.selectbox("Problem Type", ["max", "min"], index=0 if problem_type == "max" else 1)
 
         # Objective coefficients input
         objective_coeffs_str = st.text_input("Objective Function Coefficients (comma-separated)", "1, 2")
