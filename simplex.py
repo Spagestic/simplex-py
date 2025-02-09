@@ -17,30 +17,6 @@ def tabular_simplex(
     senses: list[str],
     problem_type: str = 'max'
 ) -> tuple[str, np.ndarray | None, float | None, list[np.ndarray]]:
-    """
-    Solves a linear programming problem using the tabular simplex method,
-    printing the major steps for educational purposes. This version allows
-    different types of constraints.
-
-    Args:
-        objective_coeffs (np.ndarray): Objective function coefficients. For maximization, these are 
-           the coefficients in the form z = c1*x1 + c2*x2 + ... + cn*xn. For minimization, the
-           coefficients are negated at the beginning.
-        constraint_matrix (np.ndarray): Constraint coefficient matrix, where each row is a constraint.
-        rhs_values (np.ndarray): Right-hand side values.
-        senses (list[str]): List of strings for each constraint where each entry is one of:
-                '<=' : less-than-or-equal-to constraint,
-                '>=' : greater-than-or-equal-to constraint (will be converted to <=),
-                 '=' : equality constraint.
-        problem_type (str): 'max' for maximization, 'min' for minimization.
-
-    Returns:
-        tuple[str, np.ndarray | None, float | None, list[np.ndarray]]: A tuple containing:
-            - status: 'optimal', 'unbounded', or 'infeasible'
-            - x: The optimal solution (numpy array) or None if the problem is unbounded/infeasible.
-            - z: The optimal objective value or None if the problem is unbounded/infeasible.
-            - tableau_history: A list of numpy arrays representing the tableau at each iteration.
-    """
     logger.info("Starting tabular simplex method")
     
     tableau_history = []  # Initialize list to store tableau history
