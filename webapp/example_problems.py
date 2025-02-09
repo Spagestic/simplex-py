@@ -40,5 +40,12 @@ example_problems = {
         "rhs_values": [5, 8],  # Equality x + y = 5 and inequality 2x + y ≤ 8
         "senses": ['=', '<='],
         "problem_type": "max"
+    },
+    "Example 7: Maximization with Three Variables": {
+        "objective_coeffs": [3, 4, 1],
+        "constraint_matrix": [[3, 10, 5], [5, 2, 8], [8, 10, 3]],
+        "rhs_values": [120, 60, 105],
+        "senses": ['<=', '<=', '<='],
+        "problem_type": "max"
     }
 }
