@@ -203,22 +203,20 @@ def main():
                     latex_str += r"    \text{max} & " + objective_str + r" \\" + "\n"
                     
                     # Constraints
-                    # Initialize constraint string
-                    latex_str += r"    \text{s.t.} & "
+                    latex_str += r"    \text{s.t.} & \begin{aligned}" + "\n"
                     for i in range(len(constraint_matrix)):
                         constraint_terms = [format_term(a, j) for j, a in enumerate(constraint_matrix[i])]
                         constraint_str = " ".join(term for term in constraint_terms if term)
                         if constraint_str.startswith("+"):
                             constraint_str = constraint_str[1:]
                         
-                        # Add constraint to LaTeX string
                         latex_str += constraint_str + f" {senses[i]} {int(rhs_values[i]) if isinstance(rhs_values[i], float) and rhs_values[i].is_integer() else rhs_values[i]}"
                         
-                        # Add newline except after the last constraint
                         if i < len(constraint_matrix) - 1:
-                            latex_str += r", \\" + "\n"
+                            latex_str += r" \\" + "\n"
                         else:
-                            latex_str += r", \\" + "\n"
+                            latex_str += r" \\" + "\n"
+                    latex_str += r"\end{aligned}" + r" \\" + "\n"
                     
                     # Non-negativity constraints
                     non_negativity_str = r"    & 0 \leq " + ", \quad 0 \leq ".join([f"x_{i+1}" for i in range(len(objective_coeffs))]) + "."
