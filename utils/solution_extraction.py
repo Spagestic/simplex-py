@@ -21,7 +21,7 @@ def extract_solution(
         column = tableau[:, i]
         
         # Check if the column is a unit vector
-        if np.sum(np.abs(column)) == 1 and np.sum(column == np.abs(column)) == 1:
+        if np.sum(np.abs(column)) == 1 and np.count_nonzero(column == 1) == 1:
             # If it is a unit vector, find the row where the 1 is located
             basic_variable_row = np.where(column == 1)[0][0]
             
