@@ -2,18 +2,6 @@ import numpy as np
 from .format_term import format_term
 
 def problem_latex(objective_coeffs, constraint_matrix, rhs_values, senses):
-    """
-    Formats the problem as a LaTeX string.
-
-    Args:
-        objective_coeffs (np.array): The coefficients of the objective function.
-        constraint_matrix (np.array): The matrix of constraint coefficients.
-        rhs_values (np.array): The right-hand side values of the constraints.
-        senses (list): The senses of the constraints ("<=", ">=", "=").
-
-    Returns:
-        str: A LaTeX string representing the problem.
-    """
     # Begin LaTeX string
     latex_str = r"\begin{array}{rl}" + "\n"
     
