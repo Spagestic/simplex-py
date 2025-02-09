@@ -38,7 +38,7 @@ def setup_tableau(
 
     # Constraint rows
     slack_surplus_index = num_original_vars
-    artificial_index = num_original_vars + num_slack_vars
+    artificial_index = num_original_vars + num_slack_vars + num_surplus_vars # Modified artificial index calculation
     for i in range(num_constraints):
         tableau[i + 1, :num_original_vars] = constraint_matrix[i, :]
         tableau[i + 1, -1] = rhs_values[i]
@@ -47,7 +47,7 @@ def setup_tableau(
             tableau[i + 1, slack_surplus_index] = 1
             slack_surplus_index += 1
         elif senses[i] == '>=' or senses[i] == '=':
-            tableau[i + 1, artificial_index] = 1
+            tableau[i + 1, artificial_index - num_surplus_vars] = 1 # Modified artificial variable placement
             artificial_index += 1
             if senses[i] == '>=':
                 tableau[i + 1, slack_surplus_index] = -1
