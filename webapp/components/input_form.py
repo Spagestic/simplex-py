@@ -1,5 +1,6 @@
 import streamlit as st
 import numpy as np
+from webapp.logic.problem_latex import problem_latex
 
 def input_form(example_name, example_problems):
     with st.sidebar.form("input_form"):
@@ -69,6 +70,14 @@ def input_form(example_name, example_problems):
         if constraint_matrix:
             constraint_matrix = np.array(constraint_matrix)
             rhs_values = np.array(rhs_values)
+
+        # Display the problem in LaTeX format
+        st.subheader("Problem Formulation (LaTeX)")
+        if objective_coeffs is not None:
+            latex_str = problem_latex(objective_coeffs, constraint_matrix, rhs_values, senses)
+            st.latex(latex_str)
+        else:
+            st.write("Please input the problem parameters.")
 
         # Solve button
         submitted = st.form_submit_button("Solve")
