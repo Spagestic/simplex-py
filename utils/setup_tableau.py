@@ -33,7 +33,7 @@ def setup_tableau(
     tableau = np.zeros((num_constraints + 1, num_total_vars + 1))
 
     # Objective function row
-    tableau[0, :num_original_vars] = objective_coeffs
+    tableau[0, :num_original_vars] = -objective_coeffs  # Negate objective coefficients here
     tableau[0, -1] = 0  # Objective value
 
     # Constraint rows
