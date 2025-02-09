@@ -92,13 +92,25 @@ def visualize_2d(objective_coeffs, constraint_matrix, rhs, solution):
         from scipy.spatial import ConvexHull
         
         if len(vertices) >= 3:
-            hull = ConvexHull(vertices)
+            try:
+                hull = ConvexHull(vertices)
         
-            # Extract the vertices of the convex hull
-            hull_vertices = vertices[hull.vertices]
+                # Extract the vertices of the convex hull
+                hull_vertices = vertices[hull.vertices]
         
-            # Plot the feasible region as a polygon
-            fig.add_trace(go.Scatter(x=hull_vertices[:, 0], y=hull_vertices[:, 1], fill='toself', mode='lines', name='Feasible Region', fillcolor='rgba(0,255,0,0.2)'))
+                # Plot the feasible region as a polygon
+                fig.add_trace(go.Scatter(x=hull_vertices[:, 0], y=hull_vertices[:, 1], fill='toself', mode='lines', name='Feasible Region', fillcolor='rgba(0,255,0,0.2)'))
+            except Exception as e:
+                if "QhullError" in str(e) and "qh_maxsimplex" in str(e):
+                    st.warning(f"QhullError encountered: {e}. Trying a higher tolerance.")
+                    try:
+                        hull = ConvexHull(vertices, qhull_options='Q12')  # Increase tolerance
+                        hull_vertices = vertices[hull.vertices]
+                        fig.add_trace(go.Scatter(x=hull_vertices[:, 0], y=hull_vertices[:, 1], fill='toself', mode='lines', name='Feasible Region', fillcolor='rgba(0,255,0,0.2)'))
+                    except Exception as e2:
+                        st.warning(f"Error creating convex hull even with higher tolerance: {e2}")
+                else:
+                    st.warning(f"Error creating convex hull: {e}")
         elif 0 < len(vertices) < 3:
             # Handle the case where the feasible region is a line or a point
             st.warning("The feasible region is a line or a point.")
