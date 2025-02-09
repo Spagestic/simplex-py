@@ -4,9 +4,9 @@ from utils.transform_constraints import transform_constraints
 from utils.pivot import select_entering_variable, select_leaving_variable, pivot
 from utils.solution_extraction import extract_solution
 from utils.latex_printer import print_latex_problem
+from utils.infeasibility_check import check_infeasibility
 from utils.input_validation import validate_inputs
 import logging
-from utils.infeasibility_check import check_infeasibility
 
 # Set up logging
 logger = logging.getLogger(__name__)
@@ -70,6 +70,13 @@ def tabular_simplex(
                 status = 'optimal'
                 # Extract the optimal solution and objective value from the tableau
                 optimal_solution, optimal_objective_value = extract_solution(tableau, num_original_vars, num_constraints, problem_type)
+                
+                # New feasibility check on optimal_solution using transformed constraints
+                tol = 1e-6
+                if np.any(np.dot(transformed_constraint_matrix, optimal_solution) > transformed_rhs_values + tol):
+                    print("\nProblem is infeasible!")
+                    logger.warning("Optimal solution violates at least one constraint")
+                    return 'infeasible', None, None, tableau_history
                 
                 print("\nOptimal solution found!")
                 logger.info(f"Optimal solution found: {optimal_solution}, Objective value: {optimal_objective_value}")
