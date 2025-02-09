@@ -1,7 +1,7 @@
 import numpy as np
 from .format_term import format_term
 
-def problem_latex(objective_coeffs, constraint_matrix, rhs_values, senses):
+def problem_latex(objective_coeffs, constraint_matrix, rhs_values, senses, problem_type):
     # Begin LaTeX string
     latex_str = r"\begin{array}{rl}" + "\n"
     
@@ -10,7 +10,10 @@ def problem_latex(objective_coeffs, constraint_matrix, rhs_values, senses):
     objective_str = " ".join(term for term in objective_terms if term)
     if objective_str.startswith("+"):
         objective_str = objective_str[1:]  # Remove leading "+" sign
-    latex_str += r"    \text{max} & " + objective_str + r" \\" + "\n"
+    if problem_type == 'max':
+        latex_str += r"    \text{max} & " + objective_str + r" \\" + "\n"
+    else:
+        latex_str += r"    \text{min} & " + objective_str + r" \\" + "\n"
     
     # Constraints
     latex_str += r"    \text{s.t.} & \begin{aligned}" + "\n"

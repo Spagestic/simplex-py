@@ -54,7 +54,7 @@ def main():
             if status == 'optimal':
                 # Display the problem in LaTeX format
                 st.subheader("Problem Formulation (LaTeX)")
-                latex_str = problem_latex(objective_coeffs, constraint_matrix, rhs_values, senses)
+                latex_str = problem_latex(objective_coeffs, constraint_matrix, rhs_values, senses, problem_type)
                 st.latex(latex_str)
 
             display_results(status, solution, objective_value, tableau_history, objective_coeffs, constraint_matrix, rhs_values)

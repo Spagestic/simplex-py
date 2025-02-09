@@ -7,7 +7,10 @@ def input_form(example_name, example_problems, problem_type="max"):
         st.header("Input Parameters")
 
         # Problem type selection
-        problem_type = st.selectbox("Problem Type", ["max", "min"], index=0 if problem_type == "max" else 1)
+        if 'problem_type' not in st.session_state:
+            st.session_state.problem_type = "max" if problem_type == "max" else "min"
+        problem_type = st.selectbox("Problem Type", ["max", "min"], index=0 if st.session_state.problem_type == "max" else 1)
+        st.session_state.problem_type = problem_type
 
         # Objective coefficients input
         if example_name != "None":
@@ -81,7 +84,7 @@ def input_form(example_name, example_problems, problem_type="max"):
         # Display the problem in LaTeX format
         st.subheader("Problem Formulation (LaTeX)")
         if objective_coeffs is not None:
-            latex_str = problem_latex(objective_coeffs, constraint_matrix, rhs_values, senses)
+            latex_str = problem_latex(objective_coeffs, constraint_matrix, rhs_values, senses, st.session_state.problem_type)
             st.latex(latex_str)
         else:
             st.write("Please input the problem parameters.")
