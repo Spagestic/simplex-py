@@ -50,7 +50,9 @@ def pivot(tableau: np.ndarray, entering_col_index: int, leaving_row: int) -> np.
     pivot_element = tableau[leaving_row, entering_col_index]
     
     # Divide the leaving row by the pivot element
+    print(f"\n[Pivot Step] Normalizing pivot row {leaving_row} by dividing by pivot element {pivot_element:.4f}:")
     tableau[leaving_row, :] /= pivot_element
+    print(tableau)
     logger.debug(f"Leaving row normalized by pivot element")
     
     # Subtract multiples of the leaving row from all other rows to make the
@@ -58,7 +60,9 @@ def pivot(tableau: np.ndarray, entering_col_index: int, leaving_row: int) -> np.
     for i in range(tableau.shape[0]):
         if i != leaving_row:
             factor = tableau[i, entering_col_index]
+            print(f"\n[Pivot Step] Eliminating variable in row {i} using row {leaving_row}, factor = {factor:.4f}:")
             tableau[i, :] -= factor * tableau[leaving_row, :]
+            print(tableau)
             logger.debug(f"Row {i} updated to make entering column zero")
             
     logger.info("Pivot operation complete")
