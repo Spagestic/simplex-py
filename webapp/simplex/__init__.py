@@ -65,7 +65,17 @@ def tabular_simplex(
             # Display detailed current information
             print("\n[Step] Displaying current basic variables and RHS values:")
             for i in range(1, tableau.shape[0]):
-                print(f"Row {i} (Basis): {tableau[i, :-1]} | RHS: {tableau[i, -1]}")
+                # Determine if the variable is artificial, slack, or original
+                if i - 1 < num_constraints:
+                    if senses[i-1] == '<=':
+                        var_type = "Slack"
+                    elif senses[i-1] == '>=' or senses[i-1] == '=':
+                        var_type = "Artificial"
+                    else:
+                        var_type = "Original"
+                else:
+                    var_type = "Unknown"
+                print(f"Row {i} ({var_type} Basis): {tableau[i, :-1]} | RHS: {tableau[i, -1]:.4f}")
             
             # Store the current tableau in the history
             tableau_history.append(tableau.copy())
@@ -85,18 +95,28 @@ def tabular_simplex(
 
             # Display detailed optimality test status
             print("\n[Step] Checking objective row for negative coefficients:")
-            print(tableau[0, :-1])
+            print(f"Objective Row (Z_j - C_j): {tableau[0, :-1]}")
             
             # Select entering variable
             entering_col_index = select_entering_variable(tableau)
             print(f"\nEntering variable chosen: x_{entering_col_index+1} with coefficient {tableau[0, entering_col_index]:.4f}")
+            print(f"This is the most negative coefficient, indicating the largest potential increase in the objective function.")
             logger.debug(f"Selected entering variable: column {entering_col_index}")
 
             # Compute and display ratios with detailed explanation
             ratios = calculate_ratios(tableau, entering_col_index)
             print("\n[Step] Computing ratios for leaving variable:")
+            
+            # Create a ratios tableau for display
+            ratios_tableau = np.full((tableau.shape[0]-1, 1), np.inf)
             for i, ratio in enumerate(ratios[1:], start=1):
-                print(f"Row {i} ratio: {ratio}")
+                ratios_tableau[i-1, 0] = ratio
+                print(f"Row {i} ratio: {ratio:.4f}")
+            print("Ratios are calculated as RHS / corresponding element in the entering variable's column.")
+            print("The smallest non-negative ratio determines the leaving variable.")
+            print("\nRatios Tableau:")
+            print(ratios_tableau)
+            
             leaving_row = select_leaving_variable(tableau, entering_col_index)
 
             if leaving_row is None:
@@ -106,6 +126,7 @@ def tabular_simplex(
                 return status, None, None, tableau_history
             
             print(f"\nLeaving variable chosen: row {leaving_row} with pivot element {tableau[leaving_row, entering_col_index]:.4f}")
+            print(f"This row will be replaced by the entering variable in the next iteration.")
             logger.debug("About to perform pivot operation")
             
             # Perform pivot and display normalized pivot row
@@ -114,6 +135,7 @@ def tabular_simplex(
             print(tableau)
             print("\n[Step] Normalized pivot row details:")
             print(tableau[leaving_row, :])
+            print("The pivot row has been normalized, and other rows have been adjusted to make the entering variable's column a unit vector.")
             
     except ValueError as e:
         logger.error(f"ValueError: {e}")
