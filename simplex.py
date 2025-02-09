@@ -6,6 +6,7 @@ from utils.solution_extraction import extract_solution
 from utils.latex_printer import print_latex_problem
 from utils.input_validation import validate_inputs
 import logging
+from utils.infeasibility_check import check_infeasibility
 
 # Set up logging
 logger = logging.getLogger(__name__)
@@ -48,19 +49,9 @@ def tabular_simplex(
         print(f"Objective function coefficients (c): {objective_coeffs}")
         
         # Check for infeasibility: look for artificial variables in the basis with non-zero values
-        num_slack_vars = senses.count('<=')
-        artificial_vars_start = num_original_vars + num_slack_vars
-        
-        for i in range(num_constraints):
-            basic_variable_col = np.where(tableau[i+1, :num_original_vars + num_slack_vars + num_constraints] == 1)[0]
-            if len(basic_variable_col) > 0:
-                basic_variable_col = basic_variable_col[0]
-                if basic_variable_col >= artificial_vars_start:
-                    if tableau[i+1, -1] != 0:  # Check if the artificial variable has a non-zero value
-                        status = 'infeasible'
-                        print("\nProblem is infeasible!")
-                        logger.warning("Problem is infeasible: artificial variable in basis with non-zero value")
-                        return status, None, None, tableau_history
+        status = check_infeasibility(tableau, num_original_vars, senses, num_constraints)
+        if status == 'infeasible':
+            return status, None, None, tableau_history
         
         iteration = 0
         while True:
