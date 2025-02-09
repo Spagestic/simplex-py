@@ -10,7 +10,11 @@ def input_form(example_name, example_problems, problem_type="max"):
         problem_type = st.selectbox("Problem Type", ["max", "min"], index=0 if problem_type == "max" else 1)
 
         # Objective coefficients input
-        objective_coeffs_str = st.text_input("Objective Function Coefficients (comma-separated)", "5, 4")
+        if example_name != "None":
+            objective_coeffs_str = ", ".join(map(str, example_problems[example_name]["objective_coeffs"]))
+        else:
+            objective_coeffs_str = "5, 4"
+        objective_coeffs_str = st.text_input("Objective Function Coefficients (comma-separated)", objective_coeffs_str)
         try:
             objective_coeffs = np.array([float(x) for x in objective_coeffs_str.split(',')])
         except ValueError:
