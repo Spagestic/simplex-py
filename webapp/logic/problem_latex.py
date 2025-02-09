@@ -18,7 +18,7 @@ def problem_latex(objective_coeffs, constraint_matrix, rhs_values, senses):
     latex_str = r"\begin{array}{rl}" + "\n"
     
     # Objective function
-    objective_terms = [format_term(c, i) for i, c in enumerate(objective_coeffs)]
+    objective_terms = [format_term(c, i, is_integer=c.is_integer()) for i, c in enumerate(objective_coeffs)]
     objective_str = " ".join(term for term in objective_terms if term)
     if objective_str.startswith("+"):
         objective_str = objective_str[1:]  # Remove leading "+" sign
@@ -27,7 +27,7 @@ def problem_latex(objective_coeffs, constraint_matrix, rhs_values, senses):
     # Constraints
     latex_str += r"    \text{s.t.} & \begin{aligned}" + "\n"
     for i in range(len(constraint_matrix)):
-        constraint_terms = [format_term(a, j) for j, a in enumerate(constraint_matrix[i])]
+        constraint_terms = [format_term(a, j, is_integer=a.is_integer()) for j, a in enumerate(constraint_matrix[i])]
         constraint_str = " ".join(term for term in constraint_terms if term)
         if constraint_str.startswith("+"):
             constraint_str = constraint_str[1:]
