@@ -12,15 +12,16 @@ def display_results(status, solution, objective_value, tableau_history, objectiv
 
         # Display tableau history
         st.header("Tableau History")
-        for i, tableau in enumerate(tableau_history):
-            st.subheader(f"Iteration {i + 1}")
-            st.dataframe(pd.DataFrame(tableau))  # Display tableau as a dataframe
+        if tableau_history is not None:
+            for i, tableau in enumerate(tableau_history):
+                st.subheader(f"Iteration {i + 1}")
+                st.dataframe(pd.DataFrame(tableau))  # Display tableau as a dataframe
 
-            # Calculate and display ratios
-            if i < len(tableau_history) - 1:
-                entering_col_index = np.argmin(tableau_history[i][0, :-1])
-                ratios = calculate_ratios_from_tableau(tableau_history[i], entering_col_index)
-                st.write(f"Ratios for Iteration {i + 1}: {ratios}")
+                # Calculate and display ratios
+                if i < len(tableau_history) - 1:
+                    entering_col_index = np.argmin(tableau_history[i][0, :-1])
+                    ratios = calculate_ratios_from_tableau(tableau_history[i], entering_col_index)
+                    st.write(f"Ratios for Iteration {i + 1}: {ratios}")
 
         # Display 2D graph if the problem has two variables
         if len(objective_coeffs) == 2:
