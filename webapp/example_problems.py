@@ -47,5 +47,12 @@ example_problems = {
         "rhs_values": [120, 6, 105],
         "senses": ['<=', '<=', '<='],
         "problem_type": "max"
+    },
+    "Example 8: Minimization with Three Variables": {
+        "objective_coeffs": [1, 1, 3],
+        "constraint_matrix": [[2, 1, 3], [1, 2, 4], [3, 1, -2]],
+        "rhs_values": [6, 8, 4],
+        "senses": ['>=', '>=', '>='],
+        "problem_type": "min"
     }
 }
